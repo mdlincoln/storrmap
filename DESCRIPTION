@@ -1,0 +1,17 @@
+Type: Package
+Package: storrmap
+Title: Use purrr's Map Functions with Storr
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Matthew Lincoln",
+           role = c("aut", "cre"),
+           email = "matthew.d.lincoln@gmail.com",
+           comment = c(ORCID = "0000-0002-4387-3384"))
+Description: Iterate over R objects that are too large to fit in memory with an interface between purrr's `map` function and storr's persistent key/value stores.
+License: MIT + file LICENSE
+Imports: 
+    purrr,
+    storr
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
