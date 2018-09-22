@@ -4,7 +4,20 @@
 \alias{map_to_storr}
 \title{Store the results of each mapping step within storr}
 \usage{
-map_to_storr()
+map_to_storr(x, storr, keys, .f, ...,
+  .namespace = storr$default_namespace, .flush_cache = TRUE)
+}
+\arguments{
+\item{x}{A list or vector of inputs}
+
+\item{.f}{Function to run on each object}
+
+\item{...}{Other arguments passed to \code{.f}}
+
+\item{.flush_cache}{Flush cache of objects at each step? Defaults to \code{TRUE}}
+}
+\value{
+Character vector containing the hashes of each saved object.
 }
 \description{
 Store the results of each mapping step within storr

@@ -4,7 +4,24 @@
 \alias{map_within_storr}
 \title{Map inputs from storr into outputs also saved in storr}
 \usage{
-map_within_storr()
+map_within_storr(input_keys, output_keys, storr, .f, ...,
+  input_namespace = storr$default_namespace,
+  output_namespace = storr$default_namespace, .flush_cache = TRUE)
+}
+\arguments{
+\item{input_keys}{Keys already present in \code{storr}}
+
+\item{output_keys}{Keys for objects to be written to \code{storr}}
+
+\item{.f}{Function to run on each object}
+
+\item{...}{Other arguments passed to \code{.f}}
+
+\item{.flush_cache}{Flush cache of objects at each step? Defaults to \code{TRUE}}
+
+\item{.input_namespace}{Namespace of \code{input_keys} (optional)}
+
+\item{.output_namespace}{Namescpae of \code{output_keys} (optional)}
 }
 \description{
 Map inputs from storr into outputs also saved in storr

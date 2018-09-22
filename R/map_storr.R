@@ -2,25 +2,23 @@
 #'
 #' This variant saves the [purrr::map] results within the current environment.
 #'
-#' @import storr
-#' @importFrom purrr map
+#' @inheritParams map_within_storr
 #'
-#' @param keys List of keys present in `storr`
+#' @param input_keys List of keys present in `storr`
 #' @param storr Storr object
-#' @param namespace Namespace of keys (optional)
-#' @param .f Function to run on each object retrieved from `keys`
-#' @param ... Other arguments passed to `.f`
 #' @param .flush_cache Flush cache of objects at each step? Defaults to `TRUE`
 #'
-#' @return A list resulting from map.
+#' @return A list.
 #'
 #' @export
-map_from_storr <- function(keys, storr, namespace = storr$default_namespace, .f,
-                      ..., .flush_cache = FALSE) {
-  assertthat::assert_that(all(storr$exists(keys, namespace = namespace)))
+map_from_storr <- function(input_keys, storr, .f, ..., .input_namespace = storr$default_namespace, .flush_cache = FALSE) {
+
+  assert_that(inherits(test_storr, what = "storr"))
+  assert_that(is.function(.f))
+  all_keys_exist(storr, keys, .namespace)
 
   map(keys, function(x) {
-    rx <- storr$get(x, namespace = namespace)
+    rx <- storr$get(x, namespace = .namespace)
     res <- .f(rx, ...)
 
     # Flush the storr cache once the object has been passed through the function.
@@ -31,16 +29,27 @@ map_from_storr <- function(keys, storr, namespace = storr$default_namespace, .f,
 }
 
 #' Store the results of each mapping step within storr
-map_to_storr <- function(storr, keys, namespace = storr$default_namespace, x, .f, ..., .flush_cache = TRUE) {
-  extant_keys <- storr$exists(keys, namespace)
+#'
+#' @inheritParams map_within_storr
+#' @param x A list or vector of inputs
+#'
+#' @importFrom assertthat assert_that
+#'
+#' @return Character vector containing the hashes of each saved object.
+#'
+#' @export
+map_to_storr <- function(x, storr, keys, .f, ..., .namespace = storr$default_namespace,
+                         .flush_cache = TRUE) {
 
-  if (any(extant_keys))
-    stop(sprintf("The keys %s already exist in the namespace '%s'. Please delete them from the storr before proceeding.", paste0(keys[extant_keys], collapse = ", "), namespace))
+  assert_that(inherits(test_storr, what = "storr"))
+  assert_that(is.function(.f))
+  assert_that(length(keys) == length(x))
+  no_keys_exist(storr, keys, .namespace)
 
   res <- map2_chr(x, keys, function(a, i) {
     hash <- storr$set(key = i,
               value = .f(a, ...),
-              namespace = namespace,
+              namespace = .namespace,
               use_cache = !.flush_cache)
     return(hash)
   })
@@ -49,6 +58,39 @@ map_to_storr <- function(storr, keys, namespace = storr$default_namespace, x, .f
 }
 
 #' Map inputs from storr into outputs also saved in storr
-map_within_storr <- function() {
+#'
+#' @param input_keys Keys already present in `storr`
+#' @param output_keys Keys for objects to be written to `storr`
+#' @param .f Function to run on each object
+#' @param ... Other arguments passed to `.f`
+#' @param .input_namespace Namespace of `input_keys` (optional)
+#' @param .output_namespace Namescpae of `output_keys` (optional)
+#' @param .flush_cache Flush cache of objects at each step? Defaults to `TRUE`
+#'
+#' @importFrom assertthat assert_that
+#' @importFrom purrr map2_chr
+#'
+#' @export
+map_within_storr <- function(input_keys, output_keys, storr,
+                             .f, ...,
+                             input_namespace = storr$default_namespace,
+                             output_namespace = storr$default_namespace,
+                             .flush_cache = TRUE) {
 
+  assert_that(inherits(test_storr, what = "storr"))
+  assert_that(length(input_keys) == length(output_keys))
+  all_keys_exist(storr, input_keys, input_namespace)
+  no_keys_exist(storr, output_keys, output_namespace)
+
+  res <- map2_chr(input_keys, output_keys, function(i, o) {
+    input_val <- storr$get(i, namespace = input_namespace)
+    output_val <- .f(input_val, ...)
+    hash <- storr$set(o, output_val, namespace = output_namespace)
+
+    if (.flush_cache) storr$flush_cache()
+
+    hash
+  })
+
+  invisible(res)
 }

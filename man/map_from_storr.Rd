@@ -4,25 +4,25 @@
 \alias{map_from_storr}
 \title{Map a function over a list of storr objects}
 \usage{
-map_from_storr(keys, storr, namespace = storr$default_namespace, .f, ...,
-  .keep_cache = FALSE)
+map_from_storr(input_keys, storr, .f, ...,
+  .input_namespace = storr$default_namespace, .flush_cache = FALSE)
 }
 \arguments{
-\item{keys}{List of keys present in `storr`}
+\item{input_keys}{List of keys present in \code{storr}}
 
 \item{storr}{Storr object}
 
-\item{namespace}{Namespace of keys (optional)}
+\item{.f}{Function to run on each object}
 
-\item{.f}{Function to run on each object retrieved from `keys`}
+\item{...}{Other arguments passed to \code{.f}}
 
-\item{...}{Other arguments passed to `.f`}
+\item{.input_namespace}{Namespace of \code{input_keys} (optional)}
 
-\item{.keep_cache}{Keep the retrieved objects cached? Defaults to `FALSE`}
+\item{.flush_cache}{Flush cache of objects at each step? Defaults to \code{TRUE}}
 }
 \value{
-A list resulting from map.
+A list.
 }
 \description{
-This variant saves the [purrr::map] results within the current environment.
+This variant saves the \link[purrr:map]{purrr::map} results within the current environment.
 }
