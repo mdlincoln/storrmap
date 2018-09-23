@@ -9,11 +9,10 @@ Authors@R:
            comment = c(ORCID = "0000-0002-4387-3384"))
 Description: Iterate over R objects that are too large to fit in memory with an interface between purrr's `map` function and storr's persistent key/value stores.
 License: MIT + file LICENSE
-Requires:
-    storr
 Imports:
     purrr,
-    assertthat
+    assertthat,
+    storr
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.0
