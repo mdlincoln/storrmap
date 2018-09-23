@@ -23,6 +23,9 @@ map_within_storr(input_keys, output_keys, storr, .f, ...,
 
 \item{.output_namespace}{Namescpae of \code{output_keys} (optional)}
 }
+\value{
+Character vector containing the hashes of each saved object.
+}
 \description{
 Map inputs from storr into outputs also saved in storr
 }

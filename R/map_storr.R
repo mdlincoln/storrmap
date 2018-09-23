@@ -8,6 +8,9 @@
 #' @param storr Storr object
 #' @param .flush_cache Flush cache of objects at each step? Defaults to `TRUE`
 #'
+#' @importFrom assertthat assert_that
+#' @importFrom purrr map
+#'
 #' @return A list.
 #'
 #' @export
@@ -15,10 +18,10 @@ map_from_storr <- function(input_keys, storr, .f, ..., .input_namespace = storr$
 
   assert_that(inherits(test_storr, what = "storr"))
   assert_that(is.function(.f))
-  all_keys_exist(storr, keys, .namespace)
+  all_keys_exist(storr, input_keys, .input_namespace)
 
-  map(keys, function(x) {
-    rx <- storr$get(x, namespace = .namespace)
+  map(input_keys, function(x) {
+    rx <- storr$get(x, namespace = .input_namespace)
     res <- .f(rx, ...)
 
     # Flush the storr cache once the object has been passed through the function.
@@ -34,22 +37,23 @@ map_from_storr <- function(input_keys, storr, .f, ..., .input_namespace = storr$
 #' @param x A list or vector of inputs
 #'
 #' @importFrom assertthat assert_that
+#' @importFrom purrr map2_chr
 #'
 #' @return Character vector containing the hashes of each saved object.
 #'
 #' @export
-map_to_storr <- function(x, storr, keys, .f, ..., .namespace = storr$default_namespace,
+map_to_storr <- function(x, storr, output_keys, .f, ..., .output_namespace = storr$default_namespace,
                          .flush_cache = TRUE) {
 
   assert_that(inherits(test_storr, what = "storr"))
   assert_that(is.function(.f))
-  assert_that(length(keys) == length(x))
-  no_keys_exist(storr, keys, .namespace)
+  assert_that(length(output_keys) == length(x))
+  no_keys_exist(storr, output_keys, .output_namespace)
 
-  res <- map2_chr(x, keys, function(a, i) {
+  res <- map2_chr(x, output_keys, function(a, i) {
     hash <- storr$set(key = i,
               value = .f(a, ...),
-              namespace = .namespace,
+              namespace = .output_namespace,
               use_cache = !.flush_cache)
     return(hash)
   })
@@ -69,6 +73,8 @@ map_to_storr <- function(x, storr, keys, .f, ..., .namespace = storr$default_nam
 #'
 #' @importFrom assertthat assert_that
 #' @importFrom purrr map2_chr
+#'
+#' @return Character vector containing the hashes of each saved object.
 #'
 #' @export
 map_within_storr <- function(input_keys, output_keys, storr,

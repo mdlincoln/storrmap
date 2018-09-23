@@ -4,15 +4,19 @@
 \alias{map_to_storr}
 \title{Store the results of each mapping step within storr}
 \usage{
-map_to_storr(x, storr, keys, .f, ...,
-  .namespace = storr$default_namespace, .flush_cache = TRUE)
+map_to_storr(x, storr, output_keys, .f, ...,
+  .output_namespace = storr$default_namespace, .flush_cache = TRUE)
 }
 \arguments{
 \item{x}{A list or vector of inputs}
 
+\item{output_keys}{Keys for objects to be written to \code{storr}}
+
 \item{.f}{Function to run on each object}
 
 \item{...}{Other arguments passed to \code{.f}}
+
+\item{.output_namespace}{Namescpae of \code{output_keys} (optional)}
 
 \item{.flush_cache}{Flush cache of objects at each step? Defaults to \code{TRUE}}
 }

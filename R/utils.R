@@ -15,6 +15,7 @@ no_keys_exist <- function(storr, keys, namespace) {
                            paste0(keys[extant_keys], collapse = ", "), namespace))
 }
 
+#' @import storr
 which_keys <- function(storr, keys, namespace) {
   storr$exists(keys, namespace)
 }

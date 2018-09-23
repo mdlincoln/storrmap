@@ -3,5 +3,7 @@
 export(map_from_storr)
 export(map_to_storr)
 export(map_within_storr)
+import(storr)
 importFrom(assertthat,assert_that)
+importFrom(purrr,map)
 importFrom(purrr,map2_chr)
