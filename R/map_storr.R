@@ -16,7 +16,7 @@
 #' @export
 map_from_storr <- function(input_keys, storr, .f, ..., .input_namespace = storr$default_namespace, .flush_cache = FALSE) {
 
-  assert_that(inherits(test_storr, what = "storr"))
+  assert_that(inherits(storr, what = "storr"))
   assert_that(is.function(.f))
   all_keys_exist(storr, input_keys, .input_namespace)
 
@@ -45,7 +45,7 @@ map_from_storr <- function(input_keys, storr, .f, ..., .input_namespace = storr$
 map_to_storr <- function(x, storr, output_keys, .f, ..., .output_namespace = storr$default_namespace,
                          .flush_cache = TRUE) {
 
-  assert_that(inherits(test_storr, what = "storr"))
+  assert_that(inherits(storr, what = "storr"))
   assert_that(is.function(.f))
   assert_that(length(output_keys) == length(x))
   no_keys_exist(storr, output_keys, .output_namespace)
@@ -83,7 +83,7 @@ map_within_storr <- function(input_keys, output_keys, storr,
                              output_namespace = storr$default_namespace,
                              .flush_cache = TRUE) {
 
-  assert_that(inherits(test_storr, what = "storr"))
+  assert_that(inherits(storr, what = "storr"))
   assert_that(length(input_keys) == length(output_keys))
   all_keys_exist(storr, input_keys, input_namespace)
   no_keys_exist(storr, output_keys, output_namespace)
