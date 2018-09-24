@@ -10,6 +10,8 @@ map_to_storr(x, storr, output_keys, .f, ...,
 \arguments{
 \item{x}{A list or vector of inputs}
 
+\item{storr}{Storr object}
+
 \item{output_keys}{Keys for objects to be written to \code{storr}}
 
 \item{.f}{Function to run on each object}

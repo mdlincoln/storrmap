@@ -5,7 +5,6 @@
 #' @inheritParams map_within_storr
 #'
 #' @param input_keys List of keys present in `storr`
-#' @param storr Storr object
 #' @param .flush_cache Flush cache of objects at each step? Defaults to `TRUE`
 #'
 #' @importFrom assertthat assert_that
@@ -65,6 +64,7 @@ map_to_storr <- function(x, storr, output_keys, .f, ..., .output_namespace = sto
 #'
 #' @param input_keys Keys already present in `storr`
 #' @param output_keys Keys for objects to be written to `storr`
+#' @param storr Storr object
 #' @param .f Function to run on each object
 #' @param ... Other arguments passed to `.f`
 #' @param .input_namespace Namespace of `input_keys` (optional)
@@ -79,19 +79,19 @@ map_to_storr <- function(x, storr, output_keys, .f, ..., .output_namespace = sto
 #' @export
 map_within_storr <- function(input_keys, output_keys, storr,
                              .f, ...,
-                             input_namespace = storr$default_namespace,
-                             output_namespace = storr$default_namespace,
+                             .input_namespace = storr$default_namespace,
+                             .output_namespace = storr$default_namespace,
                              .flush_cache = TRUE) {
 
   assert_that(inherits(storr, what = "storr"))
   assert_that(length(input_keys) == length(output_keys))
-  all_keys_exist(storr, input_keys, input_namespace)
-  no_keys_exist(storr, output_keys, output_namespace)
+  all_keys_exist(storr, input_keys, .input_namespace)
+  no_keys_exist(storr, output_keys, .output_namespace)
 
   res <- map2_chr(input_keys, output_keys, function(i, o) {
-    input_val <- storr$get(i, namespace = input_namespace)
+    input_val <- storr$get(i, namespace = .input_namespace)
     output_val <- .f(input_val, ...)
-    hash <- storr$set(o, output_val, namespace = output_namespace)
+    hash <- storr$set(o, output_val, namespace = .output_namespace)
 
     if (.flush_cache) storr$flush_cache()
 
