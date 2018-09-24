@@ -1,1 +1,2 @@
-# test_storr$destroy()
+# Remove the storr directory used durnig testing
+test_storr$destroy()
